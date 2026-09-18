@@ -11,8 +11,16 @@ dotenv.config({
     paath:'./env'
 })
 
-connectDB();
-
+connectDB()
+.then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`Server is runnning at port : ${process.env.PORT}`);
+    })
+})
+.catch((err) => {
+    console.log("MONGO DB Connection dailed !!!", err);
+    
+})
 
 /*
 import express from "express"
