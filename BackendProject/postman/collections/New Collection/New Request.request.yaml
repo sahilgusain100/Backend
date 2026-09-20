@@ -1,4 +1,4 @@
 $kind: http-request
-url: ""
-method: GET
+url: http://localhost:8000/api/v1/users/register
+method: POST
 order: 1789898892423
