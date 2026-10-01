@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{server}}/users/login"
+method: POST
+order: 4261365836886716
