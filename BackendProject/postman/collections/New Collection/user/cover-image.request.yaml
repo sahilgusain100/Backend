@@ -1,0 +1,20 @@
+$kind: http-request
+description: ""
+url: "{{server}}/users/cover-image"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: formdata
+  content:
+    - type: file
+      key: coverImage
+      src:
+        - /C:/Users/sahil/Downloads/butterfly.avif
+      description: ""
+      disabled: false
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0p25}}"
+order: 4500034554457393

@@ -1,0 +1,5 @@
+$kind: http-request
+description: ""
+url: "{{server}}/users/c/Sahil"
+method: GET
+order: 4503251582024381

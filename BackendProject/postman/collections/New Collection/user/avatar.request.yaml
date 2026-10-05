@@ -1,0 +1,14 @@
+$kind: http-request
+description: ""
+url: "{{server}}/users/avatar"
+method: PATCH
+body:
+  type: formdata
+  content:
+    - type: file
+      key: avatar
+      src:
+        - /C:/Users/sahil/Pictures/Screenshots/Screenshot (99).png
+      description: ""
+      disabled: false
+order: 4498547519908976

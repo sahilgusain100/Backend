@@ -20,6 +20,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
         throw new ApiError(500, " Something went wrong while generating refresh and access token")
     }
 }
+
 const registerUser = asyncHandler(async (req, res) => {
     //get user details from frontend
     //validation(are name or other things empty)
@@ -148,8 +149,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1// this removes the field from document
             }
         },
         {
@@ -248,7 +249,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    const user = User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set: {
@@ -265,34 +266,41 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 })
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-    const avatarLocalPath = req.file?.path
+    const avatarLocalPath = req.file?.path;
 
     if (!avatarLocalPath) {
-        throw new ApiError(400, "Avatar file is missing")
+        throw new ApiError(400, "Avatar file is missing");
     }
 
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
+    const avatar = await uploadOnCloudinary(avatarLocalPath);
 
-    if (!avatar.url) {
-        throw new ApiError(400, "Error while uploading on the avatar")
-
-        await User.findByIdAndUpdate(
-            req.user?._id,
-            {
-                $set: {
-                    avatar: avatar.url
-                }
-            },
-            { new: true }
-        ).select("-password")
+    if (!avatar?.url) {
+        throw new ApiError(400, "Error while uploading the avatar");
     }
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set: {
+                avatar: avatar.url
+            }
+        },
+        { new: true }
+    ).select("-password");
+
     return res
         .status(200)
-        .json(new ApiResponse(200, user, "Avatar updated Successfully"))
-})
+        .json(
+            new ApiResponse(
+                200,
+                user,
+                "Avatar updated successfully"
+            )
+        );
+});
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-    const coverImageLocalPath = req.body?.path
+    const coverImageLocalPath = req.file?.path
     if (!coverImageLocalPath) {
         throw new ApiError(400, "Cover Image file is missing")
     }
@@ -350,7 +358,7 @@ throw new ApiError(400, "Username is missing ");
     {
         $addFields: {
             subscribersCount: {
-                $size: "subscribers"
+                $size: "$subscribers"
             },
             channelsSubscribedToCount:{
                 $size: "$subscribedTo"
@@ -379,7 +387,7 @@ throw new ApiError(400, "Username is missing ");
    ])
 
 
-   if(!condition?.length){
+   if(!channel?.length){
         throw new ApiError(404, "channel does not exists")
    }
 
