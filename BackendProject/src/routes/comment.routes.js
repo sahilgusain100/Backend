@@ -7,7 +7,7 @@ import {
 } from "../controllers/comment.controller.js"
 import {verifyJWT} from "../middlewarers/auth.middleware.js"
 
-const router = Route();
+const router = Router();
 
 router.use(verifyJWT); //Apply verifyJWT middleware to all routes in this file
 
